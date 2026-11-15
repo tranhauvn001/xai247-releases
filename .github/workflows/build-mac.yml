@@ -1,0 +1,137 @@
+# Dựng bản macOS của XAI247 Switch và XAI247 Desktop (DSH) trên máy Mac của GitHub.
+# Mã build nằm ở repo riêng tư tranhauvn001/XAI247 (switch-ccs/, desktop-dsh/), kéo về bằng deploy key CHỈ ĐỌC (secret XAI247_DEPLOY_KEY).
+# Repo này không chứa mã nguồn. Chỉ chạy tay (workflow_dispatch) — người ngoài không kích hoạt được, PR từ fork không có secret.
+# publish=true: tải file lên Release cùng tag với bản Windows (switch-<ver>, dsh-<ver>); web cập nhật manifest riêng.
+name: build-mac
+on:
+  workflow_dispatch:
+    inputs:
+      app:
+        description: "App cần dựng"
+        type: choice
+        options: [both, switch, dsh]
+        default: both
+      switch_version:
+        description: "Phiên bản Switch (x.y.z)"
+        default: "1.0.22"
+      dsh_version:
+        description: "Phiên bản Desktop DSH (vd 0.2.2-rc.2.11)"
+        default: "0.2.2-rc.2.11"
+      publish:
+        description: "Đăng lên Release (tag switch-<ver> / dsh-<ver>)"
+        type: boolean
+        default: false
+permissions:
+  contents: read
+concurrency:
+  group: build-mac
+  cancel-in-progress: false
+
+jobs:
+  switch:
+    if: inputs.app != 'dsh'
+    runs-on: macos-14
+    timeout-minutes: 90
+    env:
+      VERSION: ${{ inputs.switch_version }}
+    steps:
+      - name: Kiểm tham số
+        run: '[[ "$VERSION" =~ ^[0-9]{1,4}\.[0-9]{1,4}\.[0-9]{1,4}$ ]] || { echo "phiên bản phải dạng x.y.z"; exit 1; }'
+      - uses: actions/checkout@v4
+        with:
+          repository: tranhauvn001/XAI247
+          ssh-key: ${{ secrets.XAI247_DEPLOY_KEY }}
+          persist-credentials: false
+          path: src
+          sparse-checkout: switch-ccs
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: pnpm (corepack)
+        run: corepack enable
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            ~/xai247-build/cc-switch/src-tauri/target
+          key: switch-mac-${{ hashFiles('src/switch-ccs/UPSTREAM') }}
+          restore-keys: switch-mac-
+      - name: Dựng
+        env:
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+          COREPACK_ENABLE_DOWNLOAD_PROMPT: "0"
+        run: |
+          mkdir -p ~/xai247-build
+          SRC=~/xai247-build/cc-switch OUT="$RUNNER_TEMP/out" bash src/switch-ccs/build-mac.sh "$VERSION"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: switch-mac
+          path: ${{ runner.temp }}/out/${{ inputs.switch_version }}/*
+          retention-days: 2
+          if-no-files-found: error
+
+  dsh:
+    if: inputs.app != 'switch'
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { target: mac-arm64, runner: macos-14 }
+          - { target: mac-x64, runner: macos-15-intel }
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 120
+    env:
+      VERSION: ${{ inputs.dsh_version }}
+    steps:
+      - name: Kiểm tham số
+        run: '[[ "$VERSION" =~ ^[0-9]{1,4}\.[0-9]{1,4}\.[0-9]{1,4}-[0-9A-Za-z.-]{1,40}$ ]] || { echo "phiên bản sai dạng"; exit 1; }'
+      - uses: actions/checkout@v4
+        with:
+          repository: tranhauvn001/XAI247
+          ssh-key: ${{ secrets.XAI247_DEPLOY_KEY }}
+          persist-credentials: false
+          path: src
+          sparse-checkout: desktop-dsh
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: pnpm (corepack)
+        run: corepack enable
+      - name: Dựng
+        env:
+          COREPACK_ENABLE_DOWNLOAD_PROMPT: "0"
+          COREPACK_ENABLE_AUTO_PIN: "0"
+          DSH_DESKTOP_APP_ID: xyz.xai247.desktop2
+        run: |
+          mkdir -p ~/xai247-build
+          WORK=~/xai247-build/dsh TARGET=${{ matrix.target }} bash src/desktop-dsh/build.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dsh-${{ matrix.target }}
+          path: ~/xai247-build/dsh/.xai247-out/*
+          retention-days: 2
+          if-no-files-found: error
+
+  publish:
+    if: ${{ always() && inputs.publish && !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled') }}
+    needs: [switch, dsh]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: art
+      - name: Tải lên Release
+        run: |
+          set -euo pipefail
+          ls -laR art
+          up() { tag="$1"; shift; gh release view "$tag" >/dev/null 2>&1 || gh release create "$tag" --title "$tag" --notes "$tag"; gh release upload "$tag" --clobber "$@"; }
+          if [ -d art/switch-mac ]; then up "switch-${{ inputs.switch_version }}" art/switch-mac/*; fi
+          shopt -s nullglob; files=(art/dsh-mac-*/*.dmg art/dsh-mac-*/*.zip)
+          if [ ${#files[@]} -gt 0 ]; then up "dsh-${{ inputs.dsh_version }}" "${files[@]}"; fi
