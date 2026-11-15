@@ -79,7 +79,8 @@ jobs:
       matrix:
         include:
           - { target: mac-arm64, runner: macos-15 }
-          - { target: mac-x64, runner: macos-15-intel }
+          # Intel: dựng trên máy Apple Silicon qua Rosetta (máy macos-15-intel quá chậm, bước tự kiểm LibreOffice bị quá giờ)
+          - { target: mac-x64, runner: macos-15 }
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 120
     env:
@@ -105,12 +106,14 @@ jobs:
           COREPACK_ENABLE_AUTO_PIN: "0"
           DSH_DESKTOP_APP_ID: xyz.xai247.desktop2
         run: |
+          [ "${{ matrix.target }}" != mac-x64 ] || /usr/bin/pgrep -q oahd || softwareupdate --install-rosetta --agree-to-license
           mkdir -p ~/xai247-build
           WORK=~/xai247-build/dsh TARGET=${{ matrix.target }} bash src/desktop-dsh/build.sh
+          mkdir -p "$RUNNER_TEMP/out" && cp -f ~/xai247-build/dsh/.xai247-out/* "$RUNNER_TEMP/out/"
       - uses: actions/upload-artifact@v4
         with:
           name: dsh-${{ matrix.target }}
-          path: ~/xai247-build/dsh/.xai247-out/*
+          path: ${{ runner.temp }}/out/*
           retention-days: 2
           if-no-files-found: error
 
