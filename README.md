@@ -25,6 +25,7 @@ Release: [`switch-1.0.23`](https://github.com/tranhauvn001/xai247-releases/relea
 | Windows x64 | [XAI247-Switch_1.0.23_x64-setup.exe](https://github.com/tranhauvn001/xai247-releases/releases/download/switch-1.0.23/XAI247-Switch_1.0.23_x64-setup.exe) | 14 MB | `ae56eb6ec357ccd8845de97f385058e9d30a025de034cf5028d6d4219ce009d7` |
 | Linux x64 | [XAI247-Switch_1.0.23_amd64.AppImage](https://github.com/tranhauvn001/xai247-releases/releases/download/switch-1.0.23/XAI247-Switch_1.0.23_amd64.AppImage) | 95 MB | `7ba13640e78cc63ce71e4a3b5de0bfd93a4db40613987476b3cf9d4bf6531866` |
 | Linux x64 (.deb) | [XAI247-Switch_1.0.23_amd64.deb](https://github.com/tranhauvn001/xai247-releases/releases/download/switch-1.0.23/XAI247-Switch_1.0.23_amd64.deb) | 20 MB | `7f7d25f3c9823a5ef0fab675c700d7d7b70959deb3f1c957d6d165999733ca6d` |
+| macOS (Apple Silicon + Intel) | [XAI247-Switch_1.0.23_universal.dmg](https://github.com/tranhauvn001/xai247-releases/releases/download/switch-1.0.23/XAI247-Switch_1.0.23_universal.dmg) | 40 MB | `3fc6ebb1aec93de0cbb62f2e2b884db4ebeee55904ae293d6945a216370757bc` |
 
 ## XAI247 CLI (`xai247` / `xai`) — 0.1.7
 
