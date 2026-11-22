@@ -14,15 +14,15 @@ Release: [`dsh-0.2.2-rc.2.11`](https://github.com/tranhauvn001/xai247-releases/r
 |---|---|---|---|
 | Windows x64 | [XAI247-Desktop-Setup-0.2.2-rc.2.11-win-x64.exe](https://github.com/tranhauvn001/xai247-releases/releases/download/dsh-0.2.2-rc.2.11/XAI247-Desktop-Setup-0.2.2-rc.2.11-win-x64.exe) | 301 MB | `f7666dbf8b5a8b101c0a4026f10c064b0f9bc2f5181c6bcd0d9a67dc97798f8e` |
 
-## XAI247 Switch — 1.0.22
+## XAI247 Switch — 1.0.23 (Windows) / 1.0.22 (Linux)
 
 Quản lý cấu hình Claude Code, Codex, Gemini CLI, OpenCode… dùng tài khoản XAI247. Tự cập nhật.
 
-Release: [`switch-1.0.22`](https://github.com/tranhauvn001/xai247-releases/releases/tag/switch-1.0.22)
+Release: [`switch-1.0.23`](https://github.com/tranhauvn001/xai247-releases/releases/tag/switch-1.0.23) (Windows), [`switch-1.0.22`](https://github.com/tranhauvn001/xai247-releases/releases/tag/switch-1.0.22) (Linux)
 
 | Nền tảng | File | Kích thước | SHA-256 |
 |---|---|---|---|
-| Windows x64 | [XAI247-Switch_1.0.22_x64-setup.exe](https://github.com/tranhauvn001/xai247-releases/releases/download/switch-1.0.22/XAI247-Switch_1.0.22_x64-setup.exe) | 13 MB | `91ae299a4685aabb2d466ad815d1a4545fe361bdf5b07326a2b9efc806e75dcc` |
+| Windows x64 | [XAI247-Switch_1.0.23_x64-setup.exe](https://github.com/tranhauvn001/xai247-releases/releases/download/switch-1.0.23/XAI247-Switch_1.0.23_x64-setup.exe) | 14 MB | `ae56eb6ec357ccd8845de97f385058e9d30a025de034cf5028d6d4219ce009d7` |
 | Linux x64 | [XAI247-Switch_1.0.22_amd64.AppImage](https://github.com/tranhauvn001/xai247-releases/releases/download/switch-1.0.22/XAI247-Switch_1.0.22_amd64.AppImage) | 93 MB | `498245ffa63e8ae21d9bc3efee259310c5610ec8daf956c4aef8073755841aa8` |
 | Linux x64 (.deb) | [XAI247-Switch_1.0.22_amd64.deb](https://github.com/tranhauvn001/xai247-releases/releases/download/switch-1.0.22/XAI247-Switch_1.0.22_amd64.deb) | 18 MB | `eb1d4d1eebd6dae8d1a6ae6e09b2a30753dd2d3e18af5dc5d659cdf90a063afc` |
 
