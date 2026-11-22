@@ -13,6 +13,7 @@ Release: [`dsh-0.2.2-rc.2.11`](https://github.com/tranhauvn001/xai247-releases/r
 | Nền tảng | File | Kích thước | SHA-256 |
 |---|---|---|---|
 | Windows x64 | [XAI247-Desktop-Setup-0.2.2-rc.2.11-win-x64.exe](https://github.com/tranhauvn001/xai247-releases/releases/download/dsh-0.2.2-rc.2.11/XAI247-Desktop-Setup-0.2.2-rc.2.11-win-x64.exe) | 301 MB | `f7666dbf8b5a8b101c0a4026f10c064b0f9bc2f5181c6bcd0d9a67dc97798f8e` |
+| macOS Intel | [XAI247-Desktop-Setup-0.2.2-rc.2.11-mac-x64.dmg](https://github.com/tranhauvn001/xai247-releases/releases/download/dsh-0.2.2-rc.2.11/XAI247-Desktop-Setup-0.2.2-rc.2.11-mac-x64.dmg) | 298 MB | `d31050fd5f9be2748d8b6149947eb6f371c9d9ba13a406c371f2428ddb4fe9a4` |
 
 ## XAI247 Switch — 1.0.23
 
